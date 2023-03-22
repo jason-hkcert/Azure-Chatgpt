@@ -1,0 +1,105 @@
+<!DOCTYPE html> <html> <head> <title>OpenAI Chatbot</title> <style> body { font-family: Arial, Helvetica, sans-serif; background-color: #F7F7F7; padding: 20px; }
+	h1 {  
+		text-align: center;  
+		color: #2E2E2E;  
+		margin-bottom: 30px;  
+	}  
+
+	form {  
+		display: flex;  
+		flex-direction: row;  
+		align-items: center;  
+		margin-bottom: 20px;  
+	}  
+
+	label {  
+		font-weight: bold;  
+		margin-right: 10px;  
+		color: #2E2E2E;  
+	}  
+
+	input[type="text"] {  
+		padding: 10px;  
+		border-radius: 5px;  
+		border: 1px solid #2E2E2E;  
+		flex-grow: 1;  
+		margin-right: 10px;  
+	}  
+
+	button {  
+		background-color: #2E2E2E;  
+		color: #F7F7F7;  
+		padding: 10px 20px;  
+		border: none;  
+		border-radius: 5px;  
+		cursor: pointer;  
+	}  
+
+	button:hover {  
+		background-color: #3E3E3E;  
+	}  
+
+	.chat-bubble {  
+		background-color: #F7F7F7;  
+		padding: 10px;  
+		border-radius: 5px;  
+		margin-bottom: 10px;  
+		max-width: 70%;  
+	}  
+
+	.chat-bubble strong {  
+		margin-right: 10px;  
+		color: #2E2E2E;  
+	}  
+
+	.chat-bubble:last-of-type {  
+		background-color: #2E2E2E;  
+		color: #F7F7F7;  
+	}  
+
+	.chat-bubble:last-of-type strong {  
+		color: #F7F7F7;  
+	}  
+</style>  
+</head> <body> <h1>OpenAI Chatbot</h1> <form onsubmit="return false;"> <label for="user-input">You:</label> <input type="text" id="user-input"> <button onclick="getResponse()">Send</button> </form> <div id="chat-log"></div> <script> const apiEndpoint = 'https://hkcert-openaichatbot.openai.azure.com/openai/deployments/chatbot/chat/completions'; const apiKey = '57650e5dd2d74c739d145e36fe99f3d4'; let messages = []; let chatLog = document.getElementById('chat-log');
+	function getResponse() {    
+		let userInput = document.getElementById('user-input').value;    
+		let prompt = {"role":"user","content": userInput};    
+		messages.push(prompt);    
+
+		fetch(apiEndpoint + '?api-version=2023-03-15-preview', {    
+			method: 'POST',    
+			headers: {    
+				'Content-Type': 'application/json',    
+				'api-key': apiKey    
+			},    
+			body: JSON.stringify({    
+				messages: messages,    
+				max_tokens: 3500,    
+				temperature: 0.7,    
+				top_p: 0.95,    
+				frequency_penalty: 0,    
+				presence_penalty: 0,    
+				stop: null    
+			})    
+		})    
+		.then(response => response.json())    
+		.then(data => {    
+			let botResponse = data.choices[0].message.content;  
+
+			let userBubble = document.createElement('div');  
+			userBubble.classList.add('chat-bubble');  
+			userBubble.innerHTML = `<strong>You:</strong> ${userInput}`;    
+			chatLog.appendChild(userBubble);   
+
+			let chatBubble = document.createElement('div');    
+			chatBubble.classList.add('chat-bubble');    
+			chatBubble.innerHTML = `<strong>Bot:</strong> ${botResponse}`;    
+			chatLog.appendChild(chatBubble);    
+			messages.push(data.choices[0].message);    
+			document.getElementById('user-input').value = '';    
+		})    
+		.catch(error => console.error(error));    
+	}    
+</script>    
+</body> </html>
