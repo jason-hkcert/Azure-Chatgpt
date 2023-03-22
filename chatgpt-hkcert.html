@@ -70,7 +70,10 @@
 		color: #F7F7F7;  
 	}  
 </style>  
-</head> <body> <h1>OpenAI Chatbot</h1> <form onsubmit="return false;"> <label for="user-input">You:</label> <input type="text" id="user-input"> <button onclick="getResponse()">Send</button> </form> <div id="chat-log"></div> <script> const apiEndpoint = 'https://hkcert-openaichatbot.openai.azure.com/openai/deployments/chatbot/chat/completions'; const apiKey = '57650e5dd2d74c739d145e36fe99f3d4'; let messages = []; let chatLog = document.getElementById('chat-log');
+</head> <body> <h1>OpenAI Chatbot</h1> 
+<div id="chat-log"></div> 
+<form onsubmit="return false;"> <label for="user-input">You:</label> <input type="text" id="user-input"> <button onclick="getResponse()">Send</button> </form> 
+<script> const apiEndpoint = 'https://hkcert-openaichatbot.openai.azure.com/openai/deployments/chatbot/chat/completions'; const apiKey = '57650e5dd2d74c739d145e36fe99f3d4'; let messages = []; let chatLog = document.getElementById('chat-log');
 	function getResponse() {    
 		let userInput = document.getElementById('user-input').value;    
 		let prompt = {"role":"user","content": userInput};    
